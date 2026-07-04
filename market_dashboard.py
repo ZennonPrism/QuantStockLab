@@ -35,7 +35,7 @@ pd.set_option("future.no_silent_downcasting", True)
 # Configuration
 # -------------------------------------------------------------
 
-DATA_FOLDER = Path("/Users/elliott/Projects/StockData/")
+DATA_FOLDER = Path("data")
 XLSX_REPORT_FILE = Path("reports/Daily_Watchlist.xlsx")
 HTML_REPORT_FILE = Path("reports/Daily_Dashboard.html")
 
