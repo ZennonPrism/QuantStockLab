@@ -20,16 +20,103 @@ from __future__ import annotations
 
 from pathlib import Path
 from datetime import datetime
+import atexit
+import html
 import re
+import sys
 
 import numpy as np
 import pandas as pd
+import openpyxl
 
 # -------------------------------------------------------------
 # Configuration
 # -------------------------------------------------------------
 
-DATA_FOLDER = Path("C:\Work\Projects\Investments\QuantStockLab\data")
+DATA_FOLDER = Path("/Users/elliott/Projects/StockData/")
+HTML_REPORT_FILE = Path("Daily_Dashboard.html")
+
+# -------------------------------------------------------------
+# Terminal Output Capture
+# -------------------------------------------------------------
+
+_terminal_output = []
+
+
+class TeeOutput:
+
+    def __init__(self, stream):
+        self.stream = stream
+
+    def write(self, text):
+        _terminal_output.append(text)
+        return self.stream.write(text)
+
+    def flush(self):
+        return self.stream.flush()
+
+
+def write_html_report():
+
+    output = "".join(_terminal_output)
+
+    document = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QuantStockLab Daily Dashboard</title>
+  <style>
+    body {{
+      margin: 0;
+      background: #f6f7f9;
+      color: #111827;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }}
+    main {{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }}
+    h1 {{
+      margin: 0 0 8px;
+      font-size: 28px;
+      font-weight: 700;
+    }}
+    .meta {{
+      margin: 0 0 24px;
+      color: #4b5563;
+      font-size: 14px;
+    }}
+    pre {{
+      margin: 0;
+      padding: 24px;
+      overflow-x: auto;
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 8px;
+      line-height: 1.45;
+      font-size: 13px;
+      white-space: pre;
+    }}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>QuantStockLab Daily Dashboard</h1>
+    <p class="meta">Generated {html.escape(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))}</p>
+    <pre>{html.escape(output)}</pre>
+  </main>
+</body>
+</html>
+"""
+
+    HTML_REPORT_FILE.write_text(document, encoding="utf-8")
+
+
+sys.stdout = TeeOutput(sys.stdout)
+sys.stderr = TeeOutput(sys.stderr)
+atexit.register(write_html_report)
 
 # =============================================================
 # Universe Filter
@@ -78,7 +165,11 @@ MARKET_CAP_MULTIPLIER = {
 
 def newest_excel():
 
-    files = list(DATA_FOLDER.glob("*.xlsx"))
+    files = [
+        file
+        for file in DATA_FOLDER.glob("*.xlsx")
+        if not file.name.startswith("~$")
+    ]
 
     if not files:
         raise FileNotFoundError(
@@ -1086,5 +1177,3 @@ print()
 print("=" * 62)
 print("Dashboard Completed Successfully")
 print("=" * 62)
-
-
