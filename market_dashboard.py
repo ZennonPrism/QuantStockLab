@@ -31,17 +31,17 @@ import openpyxl
 
 pd.set_option("future.no_silent_downcasting", True)
 
-# -------------------------------------------------------------
+
 # Configuration
-# -------------------------------------------------------------
+
 
 DATA_FOLDER = Path("data")
 XLSX_REPORT_FILE = Path("reports/Daily_Watchlist.xlsx")
 HTML_REPORT_FILE = Path("reports/Daily_Dashboard.html")
 
-# -------------------------------------------------------------
+
 # Terminal Output Capture
-# -------------------------------------------------------------
+
 
 _terminal_output = []
 
@@ -121,7 +121,7 @@ sys.stdout = TeeOutput(sys.stdout)
 sys.stderr = TeeOutput(sys.stderr)
 atexit.register(write_html_report)
 
-# =============================================================
+
 # Universe Filter
 #
 # MIN_MARKET_CAP_B = 0 means no lower limit
@@ -136,7 +136,7 @@ atexit.register(write_html_report)
 # 2,10      $2B ~ $10B
 # 10,200    $10B ~ $200B
 #
-# =============================================================
+
 
 MIN_MARKET_CAP_B = 0
 MAX_MARKET_CAP_B = 0
@@ -162,9 +162,9 @@ MARKET_CAP_MULTIPLIER = {
 }
 
 
-# -------------------------------------------------------------
+
 # Excel Loader
-# -------------------------------------------------------------
+
 
 def newest_excel():
 
@@ -193,9 +193,9 @@ def read_excel(path):
         return pd.read_excel(path, engine="openpyxl")
 
 
-# -------------------------------------------------------------
+
 # Parsing helpers
-# -------------------------------------------------------------
+
 
 def parse_market_cap(x):
 
@@ -276,9 +276,9 @@ def parse_ratio(x):
         return np.nan
 
 
-# -------------------------------------------------------------
+
 # Cleaning
-# -------------------------------------------------------------
+
 
 def clean_dataframe(df):
 
@@ -340,9 +340,9 @@ def clean_dataframe(df):
     return df
 
 
-# -------------------------------------------------------------
+
 # Market Cap Universe Filter
-# -------------------------------------------------------------
+
 
 def filter_market_cap(df, min_b=0, max_b=0):
 
@@ -385,9 +385,9 @@ def filter_market_cap(df, min_b=0, max_b=0):
     return filtered
 
 
-# -------------------------------------------------------------
+
 # Utility Functions
-# -------------------------------------------------------------
+
 
 def safe_mean(df, column):
 
@@ -431,9 +431,9 @@ def fmt_pct(x):
     return f"{x:.2f}%"
 
 
-# -------------------------------------------------------------
+
 # Pretty printing
-# -------------------------------------------------------------
+
 
 def title(text):
 
@@ -455,9 +455,9 @@ def line(name, value):
     print(f"{name:<35}{value:>25}")
 
 
-# -------------------------------------------------------------
+
 # Load data
-# -------------------------------------------------------------
+
 
 excel_file = newest_excel()
 
@@ -480,9 +480,9 @@ print(f"Rows    : {len(df):,}")
 print(f"Columns : {len(df.columns)}")
 
 
-# =============================================================
+
 # PART 2 - Core Market Dashboard
-# =============================================================
+
 
 def market_breadth(df):
 
@@ -626,9 +626,9 @@ def quality(df):
         )
 
 
-# =============================================================
+
 # Run Dashboard
-# =============================================================
+
 
 print()
 
@@ -655,9 +655,9 @@ print("=" * 62)
 
 
 
-# =============================================================
+
 # PART 3 - Opportunities & Rankings
-# =============================================================
+
 
 def print_table(title_text, dataframe, columns, n=10):
 
@@ -672,9 +672,9 @@ def print_table(title_text, dataframe, columns, n=10):
     print(dataframe[available].head(n).to_string(index=False))
 
 
-# -------------------------------------------------------------
+
 # Top Gainers
-# -------------------------------------------------------------
+
 
 def top_gainers(df, n=20):
 
@@ -698,9 +698,9 @@ def top_gainers(df, n=20):
     print_table("TOP GAINERS", d, cols, n)
 
 
-# -------------------------------------------------------------
+
 # Top Losers
-# -------------------------------------------------------------
+
 
 def top_losers(df, n=20):
 
@@ -724,9 +724,9 @@ def top_losers(df, n=20):
     print_table("TOP LOSERS", d, cols, n)
 
 
-# -------------------------------------------------------------
+
 # Highest Quant Rating
-# -------------------------------------------------------------
+
 
 def top_quant(df, n=20):
 
@@ -751,9 +751,9 @@ def top_quant(df, n=20):
     print_table("TOP QUANT RATING", d, cols, n)
 
 
-# -------------------------------------------------------------
+
 # Highest Revenue Growth
-# -------------------------------------------------------------
+
 
 def top_revenue_growth(df, n=20):
 
@@ -777,9 +777,9 @@ def top_revenue_growth(df, n=20):
     print_table("FASTEST REVENUE GROWTH", d, cols, n)
 
 
-# -------------------------------------------------------------
+
 # Highest EPS Growth
-# -------------------------------------------------------------
+
 
 def top_eps_growth(df, n=20):
 
@@ -802,9 +802,9 @@ def top_eps_growth(df, n=20):
     print_table("FASTEST EPS GROWTH", d, cols, n)
 
 
-# -------------------------------------------------------------
+
 # Highest Dividend Yield
-# -------------------------------------------------------------
+
 
 def top_dividend(df, n=20):
 
@@ -830,9 +830,9 @@ def top_dividend(df, n=20):
     print_table("HIGHEST DIVIDEND YIELD", d, cols, n)
 
 
-# -------------------------------------------------------------
+
 # Best Value
-# -------------------------------------------------------------
+
 
 def best_value(df, n=20):
 
@@ -859,9 +859,9 @@ def best_value(df, n=20):
     print_table("LOWEST PEG", d, cols, n)
 
 
-# -------------------------------------------------------------
+
 # Sector Summary
-# -------------------------------------------------------------
+
 
 def sector_summary(df):
 
@@ -884,9 +884,9 @@ def sector_summary(df):
     print(counts.head(20).to_string())
 
 
-# -------------------------------------------------------------
+
 # Quant Rating Distribution
-# -------------------------------------------------------------
+
 
 def quant_distribution(df):
 
@@ -914,9 +914,9 @@ def quant_distribution(df):
     print(groups.value_counts().sort_index())
 
 
-# =============================================================
+
 # Execute Part 3
-# =============================================================
+
 
 quant_distribution(df)
 
@@ -937,9 +937,7 @@ best_value(df)
 top_dividend(df)
 
 
-# =============================================================
 # PART 4 - Smart Scoring & Daily Watchlist
-# =============================================================
 
 def normalize(series):
     """Normalize a numeric series to 0-100."""
@@ -968,48 +966,48 @@ def build_watchlist(df):
 
     score = pd.Series(0.0, index=d.index)
 
-    # ----------------------------
+    
     # Quant Rating
-    # ----------------------------
+    
     if "Quant Rating" in d.columns:
         score += normalize(d["Quant Rating"]) * 0.30
 
-    # ----------------------------
+    
     # Growth
-    # ----------------------------
+    
     if "Revenue YoY" in d.columns:
         score += normalize(d["Revenue YoY"]) * 0.15
 
     if "EPS YoY" in d.columns:
         score += normalize(d["EPS YoY"]) * 0.15
 
-    # ----------------------------
+    
     # Profitability
-    # ----------------------------
+    
     if "Profit Margin" in d.columns:
         score += normalize(d["Profit Margin"]) * 0.10
 
     if "Return on Equity" in d.columns:
         score += normalize(d["Return on Equity"]) * 0.10
 
-    # ----------------------------
+    
     # Momentum
-    # ----------------------------
+    
     if "6M Perf" in d.columns:
         score += normalize(d["6M Perf"]) * 0.10
 
     if "Last Price Vs. 200D SMA" in d.columns:
         score += normalize(d["Last Price Vs. 200D SMA"]) * 0.05
 
-    # ----------------------------
+    
     # Valuation
-    # ----------------------------
+    
     if "PEG FWD" in d.columns:
         score += normalize_inverse(d["PEG FWD"]) * 0.05
 
-    # ----------------------------
+    
     # Analyst Revisions
-    # ----------------------------
+    
     if "EPS Rev." in d.columns:
         score += normalize(d["EPS Rev."]) * 0.10
 
@@ -1021,9 +1019,9 @@ def build_watchlist(df):
     )
 
 
-# -------------------------------------------------------------
+
 # Daily Watchlist
-# -------------------------------------------------------------
+
 
 def daily_watchlist(df, n=25):
 
@@ -1050,9 +1048,9 @@ def daily_watchlist(df, n=25):
     )
 
 
-# -------------------------------------------------------------
+
 # Market Health Score
-# -------------------------------------------------------------
+
 
 def market_health(df):
 
@@ -1110,9 +1108,9 @@ def market_health(df):
         print("Condition     : VERY WEAK")
 
 
-# -------------------------------------------------------------
+
 # Interesting Statistics
-# -------------------------------------------------------------
+
 
 def interesting_statistics(df):
 
@@ -1146,9 +1144,9 @@ def interesting_statistics(df):
         )
 
 
-# -------------------------------------------------------------
+
 # Export Watchlist
-# -------------------------------------------------------------
+
 
 def export_watchlist(df):
 
@@ -1163,9 +1161,9 @@ def export_watchlist(df):
     print(f"Watchlist exported -> {outfile}")
 
 
-# =============================================================
+
 # Execute Part 4
-# =============================================================
+
 
 market_health(df)
 
